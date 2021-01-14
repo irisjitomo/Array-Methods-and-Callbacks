@@ -24,8 +24,13 @@ Use getFinals to do the following:
 hint - you should be looking at the stage key inside of the objects
 */
 
-function getFinals(/* code here */) {
-   /* code here */
+function getFinals(data) {
+   let finals = data.filter(stat => {
+       if (stat.Stage === 'Final') {
+           return stat
+       }
+   })
+   return finals
 }
 
 
@@ -36,8 +41,13 @@ Use the higher-order function called getYears to do the following:
 2. Receive a callback function getFinals from task 2 
 3. Return an array called years containing all of the years in the getFinals data set*/
 
-function getYears(/* code here */) {
+function getYears(data, cb) {
     /* code here */
+    let finals = cb(data)
+    let years = finals.map(finalData => {
+        return finalData.Year
+    })
+    return years
 }
 
 
@@ -49,9 +59,17 @@ Use the higher-order function getWinners to do the following:
 3. Determines the winner (home or away) of each `finals` game. 
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
-}
+function getWinners(data, cb) {
+    let finals = cb(data)
+    let winners = finals.map(finalData => {
+      if (finalData['Home Team Goals'] > finalData['Away Team Goals']) {
+        return finalData['Home Team Name']
+      } else {
+        return finalData['Away Team Name']
+      }
+    })
+    return winners
+  }
 
 
 
@@ -65,8 +83,12 @@ Use the higher-order function getWinnersByYear to do the following:
 hint: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear(/* code here */) {
-    /* code here */
+function getWinnersByYear(data, winnersCb, yearsCb) {
+    let winners = winnersCb(data);
+    let years = yearsCb(data);
+    return winners.map((winner, i)=>{
+        return `In ${winner}, ${years[i]} won the world cup!`
+    })
 }
 
 
@@ -81,9 +103,12 @@ Use the higher order function getAverageGoals to do the following:
  Example of invocation: getAverageGoals(getFinals(fifaData));
 */
 
-function getAverageGoals(/* code here */) {
-   /* code here */
-}
+function getAverageGoals(cb) {  
+    let total = cb.reduce((acc, currentData) => {
+      return acc + (currentData['Home Team Goals'] + currentData['Away Team Goals'])
+    }, 0) 
+    return (Math.round(total/cb.length * 100) / 100).toString()
+ }
 
 
 
